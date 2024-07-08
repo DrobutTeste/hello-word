@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HelloWordApplication {
 
     public static void main(String[] args) {
+        System.out.println("Teste");
         SpringApplication.run(HelloWordApplication.class, args);
     }
 
