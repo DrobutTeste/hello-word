@@ -1,0 +1,27 @@
+FROM open-jdk-16-test-2 AS build
+
+WORKDIR /build
+COPY pom.xml ./
+COPY application/pom.xml ./
+COPY application/src/ ./application/src/
+COPY library/pom.xml ./
+COPY library/src/ ./library/src/
+RUN mvn package -Dmaven.test.skip=true -Dsonar.skip=true -Dcheckstyle.skip=true
+
+FROM openjdk:16.0.2-jdk-slim
+
+RUN apt-get -y install tzdata
+RUN echo America/Sao_Paulo > /etc/timezone
+RUN cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+RUN apt remove --yes tzdata
+
+COPY --from=build /build/application/target/*.jar  /app.jar
+
+EXPOSE ${APP_PORT}
+EXPOSE ${MANAGEMENT_PORT}
+
+CMD echo "The application will starting now..." && \
+      java \
+      -Djava.security.egd=file:/dev/./urandom \
+      ${JAVA_OPTS} \
+      -jar /app.jar
