@@ -70,7 +70,6 @@ jobs:
           BRANCH_NAME: ${{ env.branch_name }}
         run: |
           git remote add enterprise https://x-access-token:${TOKEN}@github.com/saqueepague/hello-word.git
-          git remote -v
           git push enterprise $BRANCH_NAME --force
 
 #  UNIT_TEST:
